@@ -1,50 +1,48 @@
-import React, { useState } from "react";
+import React  from "react";
 import CounterDisplay from "../component/counter/CounterDisplay";
 import CounterControlPanel from "../component/counter/CounterControlPanel";
+import {connect} from 'react-redux'
 
-function Counter() {
-  const [counter, setCounter] = useState(0);
+function Counter(props) {
 
-  const handleCounter = (type, value) => {
-    switch (type) {
-      case "increase":
-        setCounter(counter + 1);
 
-        break;
 
-      case "decrease":
-        setCounter(counter - 1);
-        break;
-
-      case "plus":
-        setCounter(counter + value);
-        break;
-      case "minus":
-        setCounter(counter - value);
-        break;
-    }
-  };
   return (
     <div>
-      <CounterDisplay counter={counter} />
+      <CounterDisplay counter={props.ctr} />
       <CounterControlPanel
         text="Increase"
-        change={() => handleCounter("increase")}
+        change={props.increase}
       />
-      <CounterControlPanel
+      <CounterControlPanel 
         text="Decrease"
-        change={() => handleCounter("decrease")}
+        change= {props.decrease}
       />
       <CounterControlPanel
         text="Plus"
-        change={() => handleCounter("plus", 10)}
+        change={props.plus}
       />
       <CounterControlPanel
         text="Minus"
-        change={() => handleCounter("minus", 10)}
+        change={props.minus}
       />
     </div>
   );
 }
 
-export default Counter;
+const mapStateToProps = (state)=>{
+  return {
+   ctr: state.counter 
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    increase: ()=> dispatch({type: 'INCREASE'}),
+    decrease: ()=> dispatch({type: 'DECREASE'}),
+    plus: ()=> dispatch({type: 'PLUS'}),
+    minus: ()=> dispatch({type: 'MINUS'})
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Counter);
